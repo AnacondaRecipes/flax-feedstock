@@ -10,17 +10,17 @@ source:
   sha256: a6247b412f14466fefcc70d043bd0facf72552d322acdda8a8700285308d390f
 
 build:
-  noarch: python
+  skip: True # [py<36]
   number: 0
   script: {{ PYTHON }} -m pip install . -vv
 
 requirements:
   host:
-    - python >=3.6
+    - python
     - pip
   run:
-    - python >=3.6
     - jax >=0.3.2
+    - jax >=0.3.16
     - matplotlib-base
     - msgpack-python
     - numpy >=1.12
