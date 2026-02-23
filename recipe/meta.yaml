@@ -69,6 +69,9 @@ test:
 about:
   home: https://github.com/google/flax
   summary: Flax A neural network library for JAX designed for flexibility
+  description: |
+    Flax provides a flexible end-to-end user experience for researchers and 
+    developers who use JAX for neural networks. Flax enables you to use the full power of JAX
   license: Apache-2.0
   license_file: LICENSE
   license_family: Apache
