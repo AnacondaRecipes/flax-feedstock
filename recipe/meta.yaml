@@ -1,5 +1,5 @@
 {% set name = "flax" %}
-{% set version = "0.10.4" %}
+{% set version = "0.12.1" %}
 
 package:
   name: {{ name|lower }}
@@ -7,25 +7,28 @@ package:
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: 57ae44d3f111fc85cff9049adb9684ce8ebd44e87bd8ca776ed52422c2d85021
+  sha256: ce2229a2ecb689678ba619e822346447c173c2ac1635e674e8249b97ed816cab
 
 build:
-  noarch: python
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv
+  skip: true  # [py<311]
+  script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation --ignore-installed --no-cache-dir -vv
 
 requirements:
+  # build:
+  #   - python
+  #   - pip
   host:
-    - python {{ python_min }}
+    - python
     - pip
     - setuptools
     - setuptools-scm
   run:
-    - python >={{ python_min }}
-    - jax >=0.4.27
-    - matplotlib-base
+    - numpy >=1.23.2  # [py>=311]
+    - numpy >=1.26.0  # [py>=312]
+    # upstream requiers jax >=0.8.1 but we have 0.5.0 in channel
+    - jax
     - msgpack-python
-    - numpy >=1.23.2
     - optax
     - orbax-checkpoint
     - tensorstore
@@ -37,17 +40,31 @@ requirements:
 test:
   imports:
     - flax
+    - flax.configurations
+    - flax.core
+    - flax.cursor
+    - flax.deprecated
+    - flax.errors
+    - flax.ids
+    - flax.linen
+    - flax.metrics
+    - flax.nnx
+    - flax.testing
+    - flax.training
+    - flax.traverse_util
+    - flax.typing
   commands:
     - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
   requires:
     - pip
-    - python {{ python_min }}
 
 about:
   home: https://github.com/google/flax
-  summary: 'Flax: A neural network library for JAX designed for flexibility'
+  summary: Flax A neural network library for JAX designed for flexibility
   license: Apache-2.0
   license_file: LICENSE
+  license_family: Apache
   doc_url: http://flax.readthedocs.io
   dev_url: https://github.com/google/flax
 
