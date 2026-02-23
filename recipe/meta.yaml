@@ -11,7 +11,8 @@ source:
 
 build:
   number: 0
-  skip: true  # [py<311]
+  # skip win: no tensorstore/orbax for win in channel
+  skip: true  # [py<311 or win]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation --ignore-installed --no-cache-dir -vv
 
 requirements:
@@ -71,7 +72,7 @@ about:
   license: Apache-2.0
   license_file: LICENSE
   license_family: Apache
-  doc_url: http://flax.readthedocs.io
+  doc_url: https://flax.readthedocs.io
   dev_url: https://github.com/google/flax
 
 extra:
