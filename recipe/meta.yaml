@@ -59,6 +59,7 @@ test:
     - tensorflow >=2.12.0   # [py<313]
     - tensorflow >=2.20.0   # [py>=313]
     - cloudpickle >=3.0.0
+    - importlib_resources
   commands:
     # TODO: rebiuld with jax >=0.8.1; enable nnx tests
     # pip check fails because upstream requires jax>=0.8.1,
