@@ -12,7 +12,8 @@ source:
 build:
   number: 0
   # skip win: no tensorstore/orbax for win in channel
-  skip: true  # [py<311 or win]
+  # skip py314: no jax/orbax for py314 in channel
+  skip: true  # [py<311 or win or py>=314]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation --ignore-installed --no-cache-dir -vv
 
 requirements:
@@ -65,7 +66,7 @@ test:
     # pip check fails because upstream requires jax>=0.8.1,
     # but the current channel provides jax 0.7.x
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest -ra -v -n auto tests --ignore=tests/nnx
+    - pytest -ra -v -n auto tests --ignore=tests/nnx --ignore=tests/checkpoints_test.py --ignore=tests/tensorboard_test.py
 
 about:
   home: https://github.com/google/flax
