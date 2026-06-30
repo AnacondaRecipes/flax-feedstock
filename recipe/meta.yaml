@@ -1,19 +1,18 @@
 {% set name = "flax" %}
-{% set version = "0.12.1" %}
+{% set version = "0.12.6" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: ce2229a2ecb689678ba619e822346447c173c2ac1635e674e8249b97ed816cab
+  sha256: 309a5fdfac8fe9cc03260c122a2cab6881bc366cd2d928aedb80ddffbfb202e4
 
 build:
-  number: 1
+  number: 0
   # skip win: no tensorstore/orbax for win in channel
-  # skip py314: no jax/orbax for py314 in channel
-  skip: true  # [py<311 or win or py>=314]
+  skip: true  # [py<311 or win]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation --ignore-installed --no-cache-dir -vv
 
 requirements:
@@ -25,10 +24,7 @@ requirements:
   run:
     - python
     - numpy >=1.23.2  # [py>=311]
-    - numpy >=1.26.0  # [py>=312]
-    # TODO: rebiuld with jax >=0.8.1
-    # upstream requiers jax >=0.8.1 but we have 0.7.x in channel
-    - jax >=0.5.0,<0.8
+    - jax >=0.8.1
     - msgpack-python
     - optax
     - orbax-checkpoint
@@ -37,6 +33,7 @@ requirements:
     - typing_extensions >=4.2.0
     - pyyaml >=5.4.1
     - treescope >=0.1.7
+    - orbax-export>=0.0.8
 
 test:
   source_files:
