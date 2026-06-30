@@ -11,8 +11,11 @@ source:
 
 build:
   number: 0
+  # skip: py314: no tensorflow for py314, dependency for orbax-export
+  skip: true  # [py<311 or py>313]
   # skip win: no tensorstore/orbax for win in channel
-  skip: true  # [py<311 or win]
+  skip: true  # [win]
+  
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation --ignore-installed --no-cache-dir -vv
 
 requirements:
@@ -33,7 +36,7 @@ requirements:
     - typing_extensions >=4.2.0
     - pyyaml >=5.4.1
     - treescope >=0.1.7
-    - orbax-export>=0.0.8
+    - orbax-export >=0.0.8
 
 test:
   source_files:
