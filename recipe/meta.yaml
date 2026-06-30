@@ -59,7 +59,7 @@ test:
     # pytest-xdist workers each import TF+JAX+MKL-linked numpy in parallel
     - export OMP_NUM_THREADS=1
     - export MKL_NUM_THREADS=1
-    - pytest -ra -v -n 4 tests --ignore=tests/checkpoints_test.py --ignore=tests/tensorboard_test.py
+    - pytest -ra -vvv tests --ignore=tests/checkpoints_test.py --ignore=tests/tensorboard_test.py
   requires:
     - pip
     - pytest
