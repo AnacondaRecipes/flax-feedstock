@@ -55,11 +55,9 @@ test:
     - flax.typing
   commands:
     - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    # Limit threading to avoid native-library thread oversubscription when
-    # pytest-xdist workers each import TF+JAX+MKL-linked numpy in parallel
-    - export OMP_NUM_THREADS=1
-    - export MKL_NUM_THREADS=1
-    - python -X faulthandler -m pytest --collect-only -vvv tests --ignore=tests/checkpoints_test.py --ignore=tests/tensorboard_test.py
+    - pytest -vvv tests/nnx
+    - pytest -vvv tests/linen
+    - pytest -vvv tests/core
   requires:
     - pip
     - pytest
