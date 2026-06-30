@@ -53,6 +53,13 @@ test:
     - flax.training
     - flax.traverse_util
     - flax.typing
+  commands:
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    # Limit threading to avoid native-library thread oversubscription when
+    # pytest-xdist workers each import TF+JAX+MKL-linked numpy in parallel
+    - export OMP_NUM_THREADS=1
+    - export MKL_NUM_THREADS=1
+    - pytest -ra -v -n 4 tests --ignore=tests/checkpoints_test.py --ignore=tests/tensorboard_test.py
   requires:
     - pip
     - pytest
@@ -61,9 +68,6 @@ test:
     - tensorflow >=2.20.0   # [py>=313]
     - cloudpickle >=3.0.0
     - importlib_resources
-  commands:
-    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest -ra -v -n auto tests --ignore=tests/checkpoints_test.py --ignore=tests/tensorboard_test.py
 
 about:
   home: https://github.com/google/flax
