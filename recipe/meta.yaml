@@ -10,7 +10,7 @@ source:
   sha256: ce2229a2ecb689678ba619e822346447c173c2ac1635e674e8249b97ed816cab
 
 build:
-  number: 0
+  number: 1
   # skip win: no tensorstore/orbax for win in channel
   # skip py314: no jax/orbax for py314 in channel
   skip: true  # [py<311 or win or py>=314]
