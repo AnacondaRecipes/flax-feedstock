@@ -1,19 +1,21 @@
 {% set name = "flax" %}
-{% set version = "0.12.1" %}
+{% set version = "0.12.6" %}
 
 package:
-  name: {{ name|lower }}
+  name: {{ name }}
   version: {{ version }}
 
 source:
   url: https://pypi.org/packages/source/{{ name[0] }}/{{ name }}/{{ name }}-{{ version }}.tar.gz
-  sha256: ce2229a2ecb689678ba619e822346447c173c2ac1635e674e8249b97ed816cab
+  sha256: 309a5fdfac8fe9cc03260c122a2cab6881bc366cd2d928aedb80ddffbfb202e4
 
 build:
   number: 0
+  # skip: py314: no tensorflow for py314, dependency for orbax-export
+  skip: true  # [py<311 or py>313]
   # skip win: no tensorstore/orbax for win in channel
-  # skip py314: no jax/orbax for py314 in channel
-  skip: true  # [py<311 or win or py>=314]
+  skip: true  # [win]
+  
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation --ignore-installed --no-cache-dir -vv
 
 requirements:
@@ -25,10 +27,7 @@ requirements:
   run:
     - python
     - numpy >=1.23.2  # [py>=311]
-    - numpy >=1.26.0  # [py>=312]
-    # TODO: rebiuld with jax >=0.8.1
-    # upstream requiers jax >=0.8.1 but we have 0.7.x in channel
-    - jax >=0.5.0,<0.8
+    - jax >=0.8.1
     - msgpack-python
     - optax
     - orbax-checkpoint
@@ -37,6 +36,7 @@ requirements:
     - typing_extensions >=4.2.0
     - pyyaml >=5.4.1
     - treescope >=0.1.7
+    - orbax-export >=0.0.8
 
 test:
   source_files:
@@ -53,6 +53,11 @@ test:
     - flax.training
     - flax.traverse_util
     - flax.typing
+  commands:
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    - pytest -vvv tests/nnx
+    - pytest -vvv tests/linen
+    - pytest -vvv tests/core
   requires:
     - pip
     - pytest
@@ -61,12 +66,6 @@ test:
     - tensorflow >=2.20.0   # [py>=313]
     - cloudpickle >=3.0.0
     - importlib_resources
-  commands:
-    # TODO: rebiuld with jax >=0.8.1; enable nnx tests
-    # pip check fails because upstream requires jax>=0.8.1,
-    # but the current channel provides jax 0.7.x
-    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
-    - pytest -ra -v -n auto tests --ignore=tests/nnx --ignore=tests/checkpoints_test.py --ignore=tests/tensorboard_test.py
 
 about:
   home: https://github.com/google/flax
